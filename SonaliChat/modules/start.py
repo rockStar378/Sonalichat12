@@ -16,6 +16,7 @@ FSUB = str(FSUB).lower() == "true"
 group_memory = {}  # {chat_id: [messages]}
 
 
+# ---------------- Start Command ---------------- #
 @app.on_message(filters.command(["start", "aistart"]) & ~filters.bot)
 async def start(client, m: Message):
     if FSUB and not await get_fsub(client, m):
@@ -25,21 +26,24 @@ async def start(client, m: Message):
         user_id = m.from_user.id
         await add_user(user_id, m.from_user.username or None)
 
+        # Send random sticker
         if STICKER and isinstance(STICKER, list):
             try:
                 sticker_to_send = random.choice(STICKER)
                 umm = await m.reply_sticker(sticker=sticker_to_send)
                 await asyncio.sleep(1)
                 await umm.delete()
-            except Exception:
+            except:
                 pass
 
+        # Logger
         log_msg = f"**✦ ηєᴡ ᴜsєʀ sᴛᴧʀᴛєᴅ ᴛʜє ʙσᴛ**\n\n**➻ ᴜsєʀ :** [{m.from_user.first_name}](tg://user?id={user_id})\n**➻ ɪᴅ :** `{user_id}`"
         try:
             await client.send_message(LOGGER_GROUP_ID, log_msg)
-        except Exception:
+        except:
             pass
 
+        # Animated start text
         try:
             accha = await m.reply_text("**ꜱᴛᴧʀᴛɪηɢ....🥀**")
             await asyncio.sleep(1)
@@ -48,9 +52,10 @@ async def start(client, m: Message):
             await accha.edit("**ꜱᴛᴧʀᴛєᴅ.....😱**")
             await asyncio.sleep(0.5)
             await accha.delete()
-        except Exception:
+        except:
             pass
 
+        # Send random start image
         try:
             if IMG and isinstance(IMG, list):
                 await m.reply_photo(
@@ -58,7 +63,7 @@ async def start(client, m: Message):
                     caption=START,
                     reply_markup=InlineKeyboardMarkup(STBUTTON),
                 )
-        except Exception:
+        except:
             pass
 
 
@@ -85,7 +90,7 @@ async def on_new_chat_members(client: Client, message: Message):
                         ]
                     ])
                 )
-        except Exception:
+        except:
             pass
 
 
@@ -115,7 +120,7 @@ async def help_command(client, message):
                     ]
                 ])
             )
-    except Exception:
+    except:
         pass
 
 
@@ -148,22 +153,19 @@ async def help_back(client, callback_query):
     await callback_query.message.edit_text(text=START, reply_markup=InlineKeyboardMarkup(STBUTTON))
 
 
-# ---------------- AI RANDOM CHATBOT ---------------- #
+# ---------------- Fast Group Chatbot ---------------- #
 @app.on_message(filters.text & filters.group & ~filters.bot)
-async def group_chatbot(client, message: Message):
+async def fast_group_chat(client, message: Message):
     chat_id = message.chat.id
     text = message.text.strip()
 
-    # Initialize memory for group
     if chat_id not in group_memory:
         group_memory[chat_id] = []
 
-    # Save message to memory (keep last 100 messages)
     group_memory[chat_id].append(text)
-    if len(group_memory[chat_id]) > 100:
+    if len(group_memory[chat_id]) > 200:
         group_memory[chat_id].pop(0)
 
-    # Random chance to send message 
-    if random.randint(1, 10) == 5 and group_memory[chat_id]:
+    if group_memory[chat_id]:
         reply_text = random.choice(group_memory[chat_id])
         await message.reply_text(reply_text)
