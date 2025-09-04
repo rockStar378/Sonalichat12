@@ -10,13 +10,12 @@ from SonaliChat import app
 from SonaliChat.database import add_user, add_chat, get_fsub, chatsdb
 from SonaliChat.modules.helpers import STBUTTON, START, HELP_READ, HELP_ABOUT, ABOUT_BUTTON
 
-# Ensure FSUB is boolean
 FSUB = str(FSUB).lower() == "true"
 
 
 @app.on_message(filters.command(["start", "aistart"]) & ~filters.bot)
 async def start(client, m: Message):
-    # Check subscription if FSUB enabled
+
     if FSUB and not await get_fsub(client, m):
         return
 
@@ -24,7 +23,7 @@ async def start(client, m: Message):
         user_id = m.from_user.id
         await add_user(user_id, m.from_user.username or None)
 
-        # Send random sticker if available
+        # Send random sticker
         if STICKER and isinstance(STICKER, list):
             try:
                 sticker_to_send = random.choice(STICKER)
@@ -34,7 +33,7 @@ async def start(client, m: Message):
             except Exception:
                 pass
 
-        # Log new user to LOGGER_GROUP_ID
+        # LOGGER_GROUP_ID
         log_msg = (
             f"**✦ ηєᴡ ᴜsєʀ sᴛᴧʀᴛєᴅ ᴛʜє ʙσᴛ**\n\n"
             f"**➻ ᴜsєʀ :** [{m.from_user.first_name}](tg://user?id={user_id})\n"
@@ -45,7 +44,6 @@ async def start(client, m: Message):
         except Exception:
             pass
 
-        # Animated "Starting..." sequence
         try:
             accha = await m.reply_text(text="**ꜱᴛᴧʀᴛɪηɢ....🥀**")
             await asyncio.sleep(1)
@@ -57,7 +55,7 @@ async def start(client, m: Message):
         except Exception:
             pass
 
-        # Send random photo with START caption and buttons
+        # Send random photo
         try:
             if IMG and isinstance(IMG, list):
                 await m.reply_photo(
