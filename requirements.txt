@@ -1,10 +1,10 @@
+flask
+pyrogram==2.0.106
 pymongo
 motor
 requests
 dnspython
-tgcrypto
+tgcrypto==1.2.2
 asyncio
 python-dotenv
-aiohttp
-cloudscraper
 git+https://github.com/Mayuri-Chan/pyrofork
