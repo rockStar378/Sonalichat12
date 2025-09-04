@@ -126,7 +126,6 @@ async def on_new_chat_members(client: Client, message: Message):
             pass
 
 
-# Bot removed from group
 @app.on_message(filters.left_chat_member)
 async def on_left_chat_member(client: Client, message: Message):
     if (await client.get_me()).id == message.left_chat_member.id:
@@ -209,3 +208,12 @@ async def about_section(client, callback_query):
 @app.on_callback_query(filters.regex('HELP_BACK'))
 async def help_back(client, callback_query):
     await callback_query.message.edit_text(text=START, reply_markup=InlineKeyboardMarkup(STBUTTON))
+
+
+# ---------------- AI CHATBOT GROUP HANDLER ---------------- #
+@app.on_message(filters.text & filters.group & ~filters.bot)
+async def group_chatbot(client, message):
+    user_text = message.text
+    # Example: Simple echo, replace with AI logic if needed
+    reply_text = f"🤖 You said: {user_text}"
+    await message.reply_text(reply_text)
