@@ -1,5 +1,6 @@
 flask
-pyrogram==2.0.106
+#pyrogram==2.0.106
+pyrofork
 pymongo
 motor
 requests
@@ -8,3 +9,4 @@ tgcrypto==1.2.2
 asyncio
 python-dotenv
 langdetect
+google-generativeai
