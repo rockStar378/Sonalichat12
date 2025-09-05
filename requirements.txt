@@ -1,6 +1,5 @@
 flask
-#pyrogram==2.0.106
-pyrofork
+git+https://github.com/Mayuri-Chan/pyrofork
 pymongo
 motor
 requests
