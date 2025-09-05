@@ -221,10 +221,11 @@ async def chatbot_callback(client, query: CallbackQuery):
         await query.edit_message_text(f"**✦ ᴄʜᴀᴛʙᴏᴛ ʜᴀs ʙᴇᴇɴ ᴅɪsᴀʙʟᴇᴅ ɪɴ {query.message.chat.title}.**")
 
 # ✅ Main Chatbot Handler (Text & Stickers)
+# ✅ Main Chatbot Handler (Text & Stickers)
 @app.on_message(filters.text | filters.sticker)
 async def chatbot_reply(client, message: Message):
     chat_id = message.chat.id
-    text = message.text.strip() if message.text else ""
+    text = message.text.strip().lower() if message.text else ""
     bot_username = (await client.get_me()).username.lower()
 
     # Check if chatbot is enabled in DB
@@ -235,82 +236,46 @@ async def chatbot_reply(client, message: Message):
     # Typing...
     await client.send_chat_action(chat_id, ChatAction.TYPING)
 
-    # ✅ Bad word filtering (fixed)
-
-    # 🔹 Group handling
-    if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
-        for key in custom_responses:
-            if key in text.lower():
-                await message.reply_text(custom_responses[key])
-                return
-
-        K = []
-        if message.sticker:
-            async for x in chatai_db.find({"word": message.sticker.file_unique_id}):
-                K.append(x['text'])
-        else:
-            async for x in chatai_db.find({"word": text}):
-                K.append(x['text'])
-
-        if K:
-            response = random.choice(K)
-            is_text = await chatai_db.find_one({"text": response})
-            if is_text and is_text['check'] == "sticker":
-                await message.reply_sticker(response)
-            else:
-                await message.reply_text(response)
+    # ----------------- Priority 1: Custom Responses -----------------
+    for key, reply in custom_responses.items():
+        if key in text:
+            await message.reply_text(reply)
             return
-            
-    # 🔹 AI Fallback if bot is mentioned
-    if f"@{bot_username}" in text.lower() or bot_username in text.lower():
-        headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
-        payload = {
-            "model": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-            "messages": [{"role": "user", "content": text}]
-        }
 
-        response = requests.post(BASE_URL, json=payload, headers=headers)
-        if response.status_code == 200:
-            result = response.json().get("choices", [{}])[0].get("message", {}).get("content", "⚠️ Empty response.")
-            await message.reply_text(result)
+    # ----------------- Priority 2: MongoDB Replies -----------------
+    K = []
+    if message.sticker:
+        async for x in chatai_db.find({"word": message.sticker.file_unique_id}):
+            K.append(x['text'])
+    else:
+        async for x in chatai_db.find({"word": text}):
+            K.append(x['text'])
+
+    if K:
+        response = random.choice(K)
+        is_text = await chatai_db.find_one({"text": response})
+        if is_text and is_text.get('check') == "sticker":
+            await message.reply_sticker(response)
         else:
-            await message.reply_text(f"❌ API failed. Status: {response.status_code}")
+            await message.reply_text(response)
         return
 
-    # 🔹 Private Chat
-    elif message.chat.type == enums.ChatType.PRIVATE:
-        for key in custom_responses:
-            if key in text.lower():
-                await message.reply_text(custom_responses[key])
-                return
+    # ----------------- Priority 3: AI Fallback -----------------
+    # Group → only reply if bot is mentioned
+    if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
+        if f"@{bot_username}" not in text:
+            return  
 
-        K = []
-        if message.sticker:
-            async for x in chatai_db.find({"word": message.sticker.file_unique_id}):
-                K.append(x['text'])
-        else:
-            async for x in chatai_db.find({"word": text}):
-                K.append(x['text'])
+    # Private → always AI fallback
+    headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
+    payload = {
+        "model": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+        "messages": [{"role": "user", "content": text}]
+    }
 
-        if K:
-            response = random.choice(K)
-            is_text = await chatai_db.find_one({"text": response})
-            if is_text and is_text['check'] == "sticker":
-                await message.reply_sticker(response)
-            else:
-                await message.reply_text(response)
-            return
-
-        # API fallback
-        headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
-        payload = {
-            "model": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-            "messages": [{"role": "user", "content": text}]
-        }
-
-        response = requests.post(BASE_URL, json=payload, headers=headers)
-        if response.status_code == 200:
-            result = response.json().get("choices", [{}])[0].get("message", {}).get("content", "⚠️ No response.")
-            await message.reply_text(result)
-        else:
-            await message.reply_text(f"❌ API failed. Status: {response.status_code}")
+    response = requests.post(BASE_URL, json=payload, headers=headers)
+    if response.status_code == 200:
+        result = response.json().get("choices", [{}])[0].get("message", {}).get("content", "⚠️ No response.")
+        await message.reply_text(result)
+    else:
+        await message.reply_text(f"❌ API failed. Status: {response.status_code}")
