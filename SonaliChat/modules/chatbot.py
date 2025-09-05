@@ -10,7 +10,7 @@ import unicodedata
 
 from langdetect import detect
 
-from SHUKLAMUSIC import app  # or wherever your string session is initialized
+from SonaliChat import app  # or wherever your string session is initialized
 
 # ✅ MongoDB Connection
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb+srv://teamdaxx123:teamdaxx123@cluster0.ysbpgcp.mongodb.net/?retryWrites=true&w=majority")
