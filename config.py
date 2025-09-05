@@ -18,7 +18,6 @@ BOT_NAME = os.environ.get("BOT_NAME","ᴋʀɪᴛɪ ᴄʜᴀᴛ")
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "Kriti_chat_bot")
 SUPPORT_GROUP = os.environ.get("SUPPORT_GROUP", "lll_BADNAM_BABY_lll")
 UPDATES_CHANNEL = os.environ.get("UPDATES_CHANNEL", "lll_BADNAM_BABY_lll")
-GEMINI_API_KEY = getenv("GEMINI_API_KEY", "AIzaSyDFM-OzXtqz7bk9GEd9FfOiC0IAPYvo4h8")
 
 STICKER = [
 "CAACAgUAAxkBAAKV2Ge_HEejUGb8foZZ9eunAivt46rNAAL9EQAC-EXwV3yNmpSjijuwHgQ",
