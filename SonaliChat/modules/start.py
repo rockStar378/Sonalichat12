@@ -80,8 +80,8 @@ async def on_new_chat_members(client: Client, message: Message):
             caption=START,
             reply_markup=InlineKeyboardMarkup([
                 [
-                    InlineKeyboardButton("ᴧᴅᴅ ϻє ʙᴧʙʏ", url=f"https://t.me/{BOT_USERNAME}?startgroup=s&admin=delete_messages+manage_video_chats+pin_messages+invite_users"),
-                    InlineKeyboardButton("ᴊσɪη sᴜᴘᴘσʀᴛ", url="https://t.me/iamvillain77")
+                    InlineKeyboardButton("ᴧᴅᴅ ϻє ʙᴧʙʏ", url=f"https://t.me/SHIRICHAT_BOT?startgroup=s&admin=delete_messages+manage_video_chats+pin_messages+invite_users"),
+                    InlineKeyboardButton("ᴊσɪη sᴜᴘᴘσʀᴛ", url="https://t.me/+uIBP86AzzcI4ZDBk")
                 ]
             ])
         )
