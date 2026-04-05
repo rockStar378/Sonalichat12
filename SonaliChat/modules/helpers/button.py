@@ -27,8 +27,8 @@ STBUTTON = [
 
 ABOUT_BUTTON = [
     [
-        InlineKeyboardButton("⌯ 𝛅ᴜᴘᴘσʀᴛ ⌯", url="https://t.me/+Ius6mdxOqpFjNWM9"),
-        InlineKeyboardButton("⌯ ᴜᴘᴅᴧᴛє ˼⌯", url="https://t.me/lll_BADNAM_BABY_lll")
+        InlineKeyboardButton("⌯ 𝛅ᴜᴘᴘσʀᴛ ⌯", url="https://t.me/shree_update"),
+        InlineKeyboardButton("⌯ ᴜᴘᴅᴧᴛє ˼⌯", url="https://t.me/+uIBP86AzzcI4ZDBk")
     ],
     [
         InlineKeyboardButton("⌯ ʙᴧᴄᴋ ⌯", callback_data=f"HELP_BACK")
