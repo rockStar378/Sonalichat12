@@ -15,9 +15,9 @@ OWNER_ID = int(getenv("OWNER_ID", None))
 OWNER = 8417541498
 LOGGER_GROUP_ID = -1002584168578
 BOT_NAME = os.environ.get("BOT_NAME","ᴋʀɪᴛɪ ᴄʜᴀᴛ")
-BOT_USERNAME = os.environ.get("BOT_USERNAME", "Kriti_chat_bot")
-SUPPORT_GROUP = os.environ.get("SUPPORT_GROUP", "lll_BADNAM_BABY_lll")
-UPDATES_CHANNEL = os.environ.get("UPDATES_CHANNEL", "lll_BADNAM_BABY_lll")
+BOT_USERNAME = os.environ.get("BOT_USERNAME", "SHIRICHAT_BOT)
+SUPPORT_GROUP = os.environ.get("SUPPORT_GROUP", "https://t.me/+uIBP86AzzcI4ZDBk)
+UPDATES_CHANNEL = os.environ.get("UPDATES_CHANNEL", "shree_update)
 
 STICKER = [
 "CAACAgUAAxkBAAKV2Ge_HEejUGb8foZZ9eunAivt46rNAAL9EQAC-EXwV3yNmpSjijuwHgQ",
